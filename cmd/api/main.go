@@ -7,6 +7,7 @@ import (
 	"github.com/benk-techworld/www-backend/cmd/api/router"
 	"github.com/benk-techworld/www-backend/internal/app"
 	"github.com/benk-techworld/www-backend/internal/db"
+	"github.com/benk-techworld/www-backend/internal/env"
 )
 
 func main() {
@@ -26,7 +27,10 @@ func run() error {
 
 	r := router.Routes()
 
-	db, err := db.Open(true)
+	dsn := env.GetString("DB_DSN", "")
+	automigrate := env.GetBool("DB_AUTOMIGRATE", true)
+
+	db, err := db.Open(dsn, automigrate)
 	if err != nil {
 		return err
 	}
