@@ -1,5 +1,5 @@
 <h1 align="center">
-  Rest API for ARBK TekHub Website
+  Rest API for the Tech4Geeks Website
 </h1>
 
 <p align="center">
