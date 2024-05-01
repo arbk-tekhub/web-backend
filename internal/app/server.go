@@ -12,12 +12,11 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/benk-techworld/www-backend/internal/config"
+	"github.com/benk-techworld/www-backend/internal/env"
 	"github.com/gin-gonic/gin"
 )
 
 const (
-	defaultAddr           = ":8080"
 	defaultIdleTimeout    = time.Minute
 	defaultReadTimeout    = 5 * time.Second
 	defaultWriteTimeout   = 10 * time.Second
@@ -28,19 +27,8 @@ var wg sync.WaitGroup
 
 func ServeHTTP(r *gin.Engine) error {
 
-	cfg := config.Get()
-
-	var addr string
-
-	port := cfg.GetInt("server.port")
-	if port == 0 {
-		addr = defaultAddr
-	} else {
-		addr = fmt.Sprintf(":%d", port)
-	}
-
 	srv := &http.Server{
-		Addr:         addr,
+		Addr:         fmt.Sprintf(":%d", env.GetInt("APP_PORT", 8080)),
 		Handler:      r,
 		ErrorLog:     slog.NewLogLogger(logger.Handler(), slog.LevelWarn),
 		ReadTimeout:  defaultReadTimeout,

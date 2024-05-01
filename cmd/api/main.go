@@ -1,21 +1,15 @@
 package main
 
 import (
-	"errors"
-	"flag"
-	"log/slog"
 	"os"
 	"runtime/debug"
 
 	"github.com/benk-techworld/www-backend/cmd/api/router"
 	"github.com/benk-techworld/www-backend/internal/app"
-	"github.com/benk-techworld/www-backend/internal/config"
-	"github.com/lmittmann/tint"
 )
 
 func main() {
 
-	app.SetLogger(&tint.Options{Level: slog.LevelDebug})
 	logger := app.GetLogger()
 
 	err := run()
@@ -28,18 +22,6 @@ func main() {
 }
 
 func run() error {
-
-	cfgFilePath := flag.String("config", "", "path to configuration file")
-	flag.Parse()
-
-	if *cfgFilePath == "" {
-		return errors.New("missing config file")
-	}
-
-	err := config.Load("json", *cfgFilePath)
-	if err != nil {
-		return err
-	}
 
 	r := router.Routes()
 
