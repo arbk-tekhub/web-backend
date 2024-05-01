@@ -12,7 +12,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/arbk-tekhub/www-backend/internal/config"
+	"github.com/benk-techworld/www-backend/internal/config"
 	"github.com/gin-gonic/gin"
 )
 

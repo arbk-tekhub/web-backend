@@ -7,9 +7,9 @@ import (
 	"os"
 	"runtime/debug"
 
-	"github.com/arbk-tekhub/www-backend/cmd/api/router"
-	"github.com/arbk-tekhub/www-backend/internal/app"
-	"github.com/arbk-tekhub/www-backend/internal/config"
+	"github.com/benk-techworld/www-backend/cmd/api/router"
+	"github.com/benk-techworld/www-backend/internal/app"
+	"github.com/benk-techworld/www-backend/internal/config"
 	"github.com/lmittmann/tint"
 )
 

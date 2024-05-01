@@ -1,5 +1,5 @@
 <h1 align="center">
-  Rest API for the Tech4Geeks Website
+  Json Rest API
 </h1>
 
 <p align="center">

@@ -1,4 +1,4 @@
-module github.com/arbk-tekhub/www-backend
+module github.com/benk-techworld/www-backend
 
 go 1.22.2
 

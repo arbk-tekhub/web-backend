@@ -3,7 +3,7 @@ package config
 import (
 	"errors"
 
-	"github.com/arbk-tekhub/www-backend/internal/validator"
+	"github.com/benk-techworld/www-backend/internal/validator"
 	"github.com/spf13/viper"
 )
 
