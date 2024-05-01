@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"os"
 	"runtime/debug"
 
@@ -25,7 +26,9 @@ func main() {
 
 func run() error {
 
-	r := router.Routes()
+	var httpPort int
+	flag.IntVar(&httpPort, "port", 8080, "http server port")
+	flag.Parse()
 
 	dsn := env.GetString("DB_DSN", "")
 	automigrate := env.GetBool("DB_AUTOMIGRATE", true)
@@ -36,5 +39,7 @@ func run() error {
 	}
 	defer db.Close()
 
-	return app.ServeHTTP(r)
+	r := router.Routes()
+
+	return app.ServeHTTP(httpPort, r)
 }

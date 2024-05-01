@@ -12,7 +12,6 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/benk-techworld/www-backend/internal/env"
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,10 +24,10 @@ const (
 
 var wg sync.WaitGroup
 
-func ServeHTTP(r *gin.Engine) error {
+func ServeHTTP(httpPort int, r *gin.Engine) error {
 
 	srv := &http.Server{
-		Addr:         fmt.Sprintf(":%d", env.GetInt("APP_PORT", 8080)),
+		Addr:         fmt.Sprintf(":%d", httpPort),
 		Handler:      r,
 		ErrorLog:     slog.NewLogLogger(logger.Handler(), slog.LevelWarn),
 		ReadTimeout:  defaultReadTimeout,
