@@ -1,3 +1,5 @@
+include .env
+
 ## Colors
 COLOR_RESET   = \033[0m
 COLOR_INFO    = \033[32m
@@ -6,9 +8,6 @@ COLOR_COMMENT = \033[33m
 ## Variables
 MAIN_PACKAGE_PATH := ./cmd/api
 BINARY_NAME := api
-
-## Load env variables
-include .env
 
 .PHONY: help
 ## Help

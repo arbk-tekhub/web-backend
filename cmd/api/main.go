@@ -6,6 +6,7 @@ import (
 
 	"github.com/benk-techworld/www-backend/cmd/api/router"
 	"github.com/benk-techworld/www-backend/internal/app"
+	"github.com/benk-techworld/www-backend/internal/db"
 )
 
 func main() {
@@ -24,6 +25,12 @@ func main() {
 func run() error {
 
 	r := router.Routes()
+
+	db, err := db.Open(true)
+	if err != nil {
+		return err
+	}
+	defer db.Close()
 
 	return app.ServeHTTP(r)
 }
