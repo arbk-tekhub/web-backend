@@ -1,5 +1,5 @@
 <h1 align="center">
-  Json Rest API
+  JSON Rest API
 </h1>
 
 <p align="center">
