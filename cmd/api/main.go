@@ -7,8 +7,6 @@ import (
 
 	"github.com/benk-techworld/www-backend/cmd/api/router"
 	"github.com/benk-techworld/www-backend/internal/app"
-	"github.com/benk-techworld/www-backend/internal/db"
-	"github.com/benk-techworld/www-backend/internal/env"
 )
 
 func main() {
@@ -26,20 +24,12 @@ func main() {
 
 func run() error {
 
-	var httpPort int
-	flag.IntVar(&httpPort, "port", 8080, "http server port")
+	var port int
+
+	flag.IntVar(&port, "port", 8080, "http server port")
 	flag.Parse()
-
-	dsn := env.GetString("DB_DSN", "")
-	automigrate := env.GetBool("DB_AUTOMIGRATE", true)
-
-	db, err := db.Open(dsn, automigrate)
-	if err != nil {
-		return err
-	}
-	defer db.Close()
 
 	r := router.Routes()
 
-	return app.ServeHTTP(httpPort, r)
+	return app.ServeHTTP(port, r)
 }

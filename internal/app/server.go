@@ -24,10 +24,10 @@ const (
 
 var wg sync.WaitGroup
 
-func ServeHTTP(httpPort int, r *gin.Engine) error {
+func ServeHTTP(port int, r *gin.Engine) error {
 
 	srv := &http.Server{
-		Addr:         fmt.Sprintf(":%d", httpPort),
+		Addr:         fmt.Sprintf(":%d", port),
 		Handler:      r,
 		ErrorLog:     slog.NewLogLogger(logger.Handler(), slog.LevelWarn),
 		ReadTimeout:  defaultReadTimeout,
