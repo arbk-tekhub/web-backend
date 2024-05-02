@@ -8,6 +8,7 @@ COLOR_COMMENT = \033[33m
 ## Variables
 MAIN_PACKAGE_PATH := ./cmd/api
 BINARY_NAME := api
+SERVER_PORT := 8080
 
 .PHONY: help
 ## Help
@@ -58,7 +59,7 @@ build:
 .PHONY: run
 ## run the application
 run: build
-	./build/${BINARY_NAME}
+	./build/${BINARY_NAME} -port ${SERVER_PORT}
 
 
 .PHONY: run/live
