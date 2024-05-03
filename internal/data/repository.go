@@ -12,6 +12,7 @@ type Repository struct {
 		Create(article *models.Article) error
 		GetByID(id primitive.ObjectID) (*models.Article, error)
 		Delete(id primitive.ObjectID) (*mongo.DeleteResult, error)
+		Get(title string, tags []string, filters models.Filters) ([]models.Article, error)
 	}
 }
 

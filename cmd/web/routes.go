@@ -36,6 +36,7 @@ func (app *application) Routes() *gin.Engine {
 	// @API V1: Public routes
 	v1.GET("/health", app.healthCheckHandler)
 	v1.GET("/articles/:id", app.fetchArticleHandler)
+	v1.GET("/articles", app.fetchArticlesHandler)
 
 	// @API V1: Private routes
 	v1.POST("/articles", app.createArticleHandler)

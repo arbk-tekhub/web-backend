@@ -76,3 +76,34 @@ func (app *application) deleteArticleHandler(c *gin.Context) {
 		"message": "article successfully deleted",
 	})
 }
+
+func (app *application) fetchArticlesHandler(c *gin.Context) {
+
+	var input service.FilterArticlesInput
+
+	qs := c.Request.URL.Query()
+
+	input.Title = readString(qs, "title", "")
+	input.Tags = readCsv(qs, "tags", []string{})
+	input.Page = readInt(qs, "page", 1)
+	input.PageSize = readInt(qs, "page_size", 20)
+	input.Sort = readString(qs, "sort", "-published")
+
+	articles, err := app.service.GetArticles(&input)
+	if err != nil {
+		switch {
+		case errors.Is(err, service.ErrFailedValidation):
+			c.JSON(http.StatusUnprocessableEntity, gin.H{
+				"error": input.ValidationErrors,
+			})
+		default:
+			app.internalServerErrorResponse(c, err)
+
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"articles": articles,
+	})
+}

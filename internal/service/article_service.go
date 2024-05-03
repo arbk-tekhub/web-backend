@@ -96,3 +96,27 @@ func (svc *Service) DeleteArticle(id string) error {
 
 	return nil
 }
+
+type FilterArticlesInput struct {
+	Title string
+	Tags  []string
+	models.Filters
+	ValidationErrors map[string]string
+}
+
+func (svc *Service) GetArticles(inputFilters *FilterArticlesInput) ([]models.Article, error) {
+
+	v := validator.New()
+	inputFilters.ValidationErrors = v.Errors
+	inputFilters.SortSafeList = []string{"title", "published", "-title", "-published"}
+	if models.ValidateFilters(v, inputFilters.Filters); v.HasErrors() {
+		return nil, ErrFailedValidation
+	}
+
+	articles, err := svc.Repo.Article.Get(inputFilters.Title, inputFilters.Tags, inputFilters.Filters)
+	if err != nil {
+		return nil, err
+	}
+
+	return articles, nil
+}
