@@ -1,12 +1,10 @@
-include .env
-
 ## Colors
 COLOR_RESET   = \033[0m
 COLOR_INFO    = \033[32m
 COLOR_COMMENT = \033[33m
 
 ## Variables
-MAIN_PACKAGE_PATH := ./cmd/api
+MAIN_PACKAGE_PATH := ./cmd/web
 BINARY_NAME := api
 SERVER_PORT := 8080
 

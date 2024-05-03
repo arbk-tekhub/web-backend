@@ -1,4 +1,4 @@
-package app
+package main
 
 import (
 	"context"
@@ -8,11 +8,8 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"sync"
 	"syscall"
 	"time"
-
-	"github.com/gin-gonic/gin"
 )
 
 const (
@@ -22,14 +19,11 @@ const (
 	defaultShutdownPeriod = 30 * time.Second
 )
 
-var wg sync.WaitGroup
-
-func ServeHTTP(port int, r *gin.Engine) error {
-
+func (app *application) serveHTTP() error {
 	srv := &http.Server{
-		Addr:         fmt.Sprintf(":%d", port),
-		Handler:      r,
-		ErrorLog:     slog.NewLogLogger(logger.Handler(), slog.LevelWarn),
+		Addr:         fmt.Sprintf(":%d", app.config.httpPort),
+		Handler:      app.Routes(),
+		ErrorLog:     slog.NewLogLogger(app.logger.Handler(), slog.LevelWarn),
 		ReadTimeout:  defaultReadTimeout,
 		WriteTimeout: defaultWriteTimeout,
 		IdleTimeout:  defaultIdleTimeout,
@@ -47,7 +41,7 @@ func ServeHTTP(port int, r *gin.Engine) error {
 		shutdownErrorChan <- srv.Shutdown(ctx)
 	}()
 
-	logger.Info(fmt.Sprintf("started server on %s", srv.Addr))
+	app.logger.Info(fmt.Sprintf("started server on %s", srv.Addr))
 
 	err := srv.ListenAndServe()
 	if !errors.Is(err, http.ErrServerClosed) {
@@ -59,9 +53,9 @@ func ServeHTTP(port int, r *gin.Engine) error {
 		return err
 	}
 
-	logger.Warn("stopped server")
+	app.logger.Warn("stopped server")
 
-	wg.Wait()
+	app.wg.Wait()
 
 	return nil
 }

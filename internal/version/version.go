@@ -5,7 +5,7 @@ import (
 	"runtime/debug"
 )
 
-const version = "0.1.0"
+const version = "1.0.0"
 
 func Get() string {
 	return version

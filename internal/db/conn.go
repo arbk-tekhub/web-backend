@@ -9,11 +9,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
-type Client struct {
-	*mongo.Client
+type DB struct {
+	Client *mongo.Client
+	Name   string
 }
 
-func Open(uri string) (*Client, error) {
+func Open(uri string, dbName string) (*DB, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -28,6 +29,6 @@ func Open(uri string) (*Client, error) {
 		return nil, err
 	}
 
-	return &Client{mongoClient}, nil
+	return &DB{mongoClient, dbName}, nil
 
 }
