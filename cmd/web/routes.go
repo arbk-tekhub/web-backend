@@ -16,6 +16,16 @@ func (app *application) Routes() *gin.Engine {
 	router.NoMethod(app.methodNotAllowedResponse)
 	router.NoRoute(app.notFoundResponse)
 
+	router.Static("/static", "./assets/static/")
+
+	router.LoadHTMLGlob("assets/templates/*")
+
+	router.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"msg": "Benk Techworld Backend",
+		})
+	})
+
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",
@@ -23,8 +33,10 @@ func (app *application) Routes() *gin.Engine {
 	})
 
 	v1 := router.Group("/v1")
+	// @API V1: Public routes
 	v1.GET("/health", app.healthCheckHandler)
 
+	// @API V1: Private routes
 	v1.POST("/articles", app.createArticleHandler)
 
 	return router
