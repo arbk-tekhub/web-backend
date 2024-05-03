@@ -5,7 +5,7 @@ COLOR_COMMENT = \033[33m
 
 ## Variables
 MAIN_PACKAGE_PATH := ./cmd/web
-BINARY_NAME := api
+BINARY_NAME := web
 SERVER_PORT := 8080
 
 .PHONY: help
@@ -66,37 +66,7 @@ run/live:
 	go run github.com/cosmtrek/air@v1.43.0 \
 		--build.cmd "make build" --build.bin "./build/${BINARY_NAME}" --build.delay "100" \
 		--build.exclude_dir "" \
-		--build.include_ext "go,sql" \
+		--build.include_ext "go,html,js" \
 		--misc.clean_on_exit "true"
 
 
-# ==================================================================================== #
-# SQL MIGRATIONS
-# ==================================================================================== #
-
-.PHONY: migrations/new
-## create a new database migration
-migrations/new:
-	go run -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest create -seq -ext=.sql -dir=./assets/migrations ${name}
-
-.PHONY: migrations/up
-## apply all up database migrations
-migrations/up:
-	go run -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest -path=./assets/migrations -database="postgres://${DB_DSN}" up
-
-
-.PHONY: migrations/down
-## apply all down database migrations
-migrations/down:
-	go run -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest -path=./assets/migrations -database="postgres://${DB_DSN}" down
-
-.PHONY: migrations/goto
-## migrate to a specific version number
-migrations/goto:
-	go run -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest -path=./assets/migrations -database="postgres://${DB_DSN}" goto ${version}
-
-
-.PHONY: migrations/version
-## print the current in-use migration version
-migrations/version:
-	go run -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest -path=./assets/migrations -database="postgres://${DB_DSN}" version
