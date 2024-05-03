@@ -35,9 +35,11 @@ func (app *application) Routes() *gin.Engine {
 	v1 := router.Group("/v1")
 	// @API V1: Public routes
 	v1.GET("/health", app.healthCheckHandler)
+	v1.GET("/articles/:id", app.fetchArticleHandler)
 
 	// @API V1: Private routes
 	v1.POST("/articles", app.createArticleHandler)
+	v1.DELETE("/articles/:id", app.deleteArticleHandler)
 
 	return router
 }

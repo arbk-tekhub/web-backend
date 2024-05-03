@@ -1,11 +1,14 @@
 package service
 
 import (
+	"errors"
 	"strings"
 	"time"
 
 	"github.com/benk-techworld/www-backend/internal/models"
 	"github.com/benk-techworld/www-backend/internal/validator"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type CreateArticleInput struct {
@@ -49,4 +52,47 @@ func (svc Service) CreateArticle(input *CreateArticleInput) error {
 	}
 
 	return svc.Repo.Article.Create(&article)
+}
+
+func (svc *Service) GetArticleByID(id string) (*models.Article, error) {
+
+	docID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		if errors.Is(err, primitive.ErrInvalidHex) {
+			return nil, ErrFailedValidation
+		}
+		return nil, err
+	}
+
+	article, err := svc.Repo.Article.GetByID(docID)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return nil, ErrNotFound
+		}
+		return nil, err
+
+	}
+	return article, nil
+}
+
+func (svc *Service) DeleteArticle(id string) error {
+
+	docID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		if errors.Is(err, primitive.ErrInvalidHex) {
+			return ErrFailedValidation
+		}
+		return err
+	}
+
+	res, err := svc.Repo.Article.Delete(docID)
+	if err != nil {
+		return err
+	}
+
+	if res.DeletedCount == 0 {
+		return ErrNotFound
+	}
+
+	return nil
 }
