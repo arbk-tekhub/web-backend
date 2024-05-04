@@ -15,6 +15,20 @@ import (
 	"github.com/lmittmann/tint"
 )
 
+// @title     Benk Techworld API
+// @version 1.0
+// @description An API written in Go using Gin framework.
+
+// @contact.name Arafet BenKilani
+// @contact.url https://www.linkedin.com/in/arafet-ben-kilani/
+// @contact.email mr.arafetk@gmail.com
+
+// @license.name  MIT
+// @license.url   https://opensource.org/license/mit
+
+// @host localhost:8080
+// @BasePath  /v1
+
 func main() {
 
 	err := run()

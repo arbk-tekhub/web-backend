@@ -1,0 +1,20 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "An API written in Go using Gin framework.",
+        "title": "Benk Techworld API",
+        "contact": {
+            "name": "Arafet BenKilani",
+            "url": "https://www.linkedin.com/in/arafet-ben-kilani/",
+            "email": "mr.arafetk@gmail.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/license/mit"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/v1",
+    "paths": {}
+}

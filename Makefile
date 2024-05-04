@@ -70,3 +70,7 @@ run/live:
 		--misc.clean_on_exit "true"
 
 
+.PHONY: swag
+## generate swagger docs
+swag:
+	swag init --dir ${MAIN_PACKAGE_PATH}
