@@ -72,7 +72,7 @@ func (ar ArticleRepo) Get(title string, tags []string, filters models.Filters) (
 	}
 
 	if len(tags) > 0 {
-		filter["tags"] = bson.M{"$all": tags}
+		filter["tags"] = bson.M{"$in": tags}
 	}
 
 	findOptions := options.Find()
