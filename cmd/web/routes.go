@@ -41,6 +41,7 @@ func (app *application) Routes() *gin.Engine {
 	// @API V1: Private routes
 	v1.POST("/articles", app.createArticleHandler)
 	v1.DELETE("/articles/:id", app.deleteArticleHandler)
+	v1.PATCH("/articles/:id", app.updateArticleHandler)
 
 	return router
 }

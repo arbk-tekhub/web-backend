@@ -107,3 +107,20 @@ func (ar ArticleRepo) Get(title string, tags []string, filters models.Filters) (
 
 	return articles, nil
 }
+
+func (ar ArticleRepo) Update(id primitive.ObjectID, updateDoc bson.M) *mongo.SingleResult {
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	filter := bson.M{
+		"_id": id,
+	}
+
+	update := bson.M{"$set": updateDoc, "$currentDate": bson.M{"updated": true}, "$inc": bson.M{"version": 1}}
+
+	options := options.FindOneAndUpdate().SetReturnDocument(options.After)
+
+	return ar.storage.Client.Database(ar.storage.Name).Collection("articles").FindOneAndUpdate(ctx, filter, update, options)
+
+}

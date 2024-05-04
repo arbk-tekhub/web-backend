@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/benk-techworld/www-backend/internal/models"
+	"github.com/benk-techworld/www-backend/internal/utils"
 	"github.com/benk-techworld/www-backend/internal/validator"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -16,7 +17,6 @@ type CreateArticleInput struct {
 	Content          string            `json:"content"`
 	Tags             []string          `json:"tags"`
 	Author           string            `bson:"author"`
-	Status           string            `json:"status"`
 	ValidationErrors map[string]string `json:"-"`
 }
 
@@ -31,27 +31,23 @@ func (svc Service) CreateArticle(input *CreateArticleInput) error {
 	v.Check(input.Tags != nil, "tags", "must be provided")
 	v.Check(len(input.Tags) > 0, "tags", "must not be empty")
 	v.Check(validator.Unique(input.Tags), "tags", "must contain unique values")
-	v.Check(input.Status != "", "status", "must be provided")
-	v.Check(validator.PermittedValues(strings.ToLower(input.Status), "published", "unpublished"), "status", "unrecognized value")
 
 	if v.HasErrors() {
 		return ErrFailedValidation
 	}
 
-	article := models.Article{
+	article := &models.Article{
 		Title:   input.Title,
 		Content: input.Content,
 		Tags:    input.Tags,
 		Author:  input.Author,
-		Status:  strings.ToLower(input.Status),
 		Created: time.Now(),
 	}
 
-	if strings.ToLower(article.Status) == "published" {
-		article.Published = time.Now()
-	}
+	// Default values
+	article.Status = "published"
 
-	return svc.Repo.Article.Create(&article)
+	return svc.Repo.Article.Create(article)
 }
 
 func (svc *Service) GetArticleByID(id string) (*models.Article, error) {
@@ -59,7 +55,7 @@ func (svc *Service) GetArticleByID(id string) (*models.Article, error) {
 	docID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		if errors.Is(err, primitive.ErrInvalidHex) {
-			return nil, ErrFailedValidation
+			return nil, ErrNotFound
 		}
 		return nil, err
 	}
@@ -80,7 +76,7 @@ func (svc *Service) DeleteArticle(id string) error {
 	docID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		if errors.Is(err, primitive.ErrInvalidHex) {
-			return ErrFailedValidation
+			return ErrNotFound
 		}
 		return err
 	}
@@ -119,4 +115,55 @@ func (svc *Service) GetArticles(inputFilters *FilterArticlesInput) ([]models.Art
 	}
 
 	return articles, nil
+}
+
+type UpdateArticleInput struct {
+	Title            string            `bson:"title,omitempty" json:"title,omitempty"`
+	Content          string            `bson:"content,omitempty" json:"content,omitempty"`
+	Tags             []string          `bson:"tags,omitempty" json:"tags,omitempty"`
+	Author           string            `bson:"author,omitempty" json:"author,omitempty"`
+	Status           string            `bson:"status,omitempty" json:"status,omitempty"`
+	ValidationErrors map[string]string `bson:"-" json:"-"`
+}
+
+func (svc *Service) UpdateArticle(id string, input *UpdateArticleInput) (*models.Article, error) {
+
+	docID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		if errors.Is(err, primitive.ErrInvalidHex) {
+			return nil, ErrNotFound
+		}
+		return nil, err
+	}
+
+	v := validator.New()
+	input.ValidationErrors = v.Errors
+
+	v.Check(validator.PermittedValues(strings.ToLower(input.Status), "published", "unpublished"), "status", "unrecognized value")
+
+	if v.HasErrors() {
+		return nil, ErrFailedValidation
+	}
+
+	updateDoc, err := utils.StructToBsonMap(input)
+	if err != nil {
+		return nil, err
+	}
+
+	res := svc.Repo.Article.Update(docID, updateDoc)
+	if res.Err() != nil {
+		if errors.Is(res.Err(), mongo.ErrNoDocuments) {
+			return nil, ErrNotFound
+		}
+		return nil, res.Err()
+	}
+
+	var updatedArticle models.Article
+
+	if err = res.Decode(&updatedArticle); err != nil {
+		return nil, err
+	}
+
+	return &updatedArticle, nil
+
 }
