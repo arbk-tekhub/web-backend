@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 services:
   app:
     build:
@@ -11,4 +11,19 @@ services:
     expose:
       - 8080
 
-  # @Todo: Add Reverse Proxy - Caddy
+  caddy:
+    build:
+      context: ./caddy
+      dockerfile: Dockerfile
+    container_name: caddy
+    ports:
+      - "8443:443"
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+
+volumes:
+  caddy_data:
+  caddy_config:

@@ -1,0 +1,11 @@
+localhost {
+    reverse_proxy app:8080 {
+
+        health_uri app:8080/ping
+
+        header_down +X-Content-Type-Options "nosniff"
+        header_down +X-Frame-Options "deny"
+        header_down +Referrer-Policy "origin-when-cross-origin"
+
+    }
+}
