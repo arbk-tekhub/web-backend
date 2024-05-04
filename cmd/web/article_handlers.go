@@ -80,7 +80,7 @@ func (app *application) deleteArticleHandler(c *gin.Context) {
 
 func (app *application) fetchArticlesHandler(c *gin.Context) {
 
-	var input service.FilterArticlesInput
+	var input service.FetchArticlesInput
 
 	qs := c.Request.URL.Query()
 

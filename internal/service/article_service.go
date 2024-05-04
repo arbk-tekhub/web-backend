@@ -20,6 +20,22 @@ type CreateArticleInput struct {
 	ValidationErrors map[string]string `json:"-"`
 }
 
+type UpdateArticleInput struct {
+	Title            string            `bson:"title,omitempty" json:"title,omitempty"`
+	Content          string            `bson:"content,omitempty" json:"content,omitempty"`
+	Tags             []string          `bson:"tags,omitempty" json:"tags,omitempty"`
+	Author           string            `bson:"author,omitempty" json:"author,omitempty"`
+	Status           string            `bson:"status,omitempty" json:"status,omitempty"`
+	ValidationErrors map[string]string `bson:"-" json:"-"`
+}
+
+type FetchArticlesInput struct {
+	Title string
+	Tags  []string
+	models.Filters
+	ValidationErrors map[string]string
+}
+
 func (svc Service) CreateArticle(input *CreateArticleInput) error {
 
 	v := validator.New()
@@ -93,37 +109,22 @@ func (svc *Service) DeleteArticle(id string) error {
 	return nil
 }
 
-type FilterArticlesInput struct {
-	Title string
-	Tags  []string
-	models.Filters
-	ValidationErrors map[string]string
-}
-
-func (svc *Service) GetArticles(inputFilters *FilterArticlesInput) ([]models.Article, error) {
+func (svc *Service) GetArticles(input *FetchArticlesInput) ([]models.Article, error) {
 
 	v := validator.New()
-	inputFilters.ValidationErrors = v.Errors
-	inputFilters.SortSafeList = []string{"title", "published", "-title", "-published"}
-	if models.ValidateFilters(v, inputFilters.Filters); v.HasErrors() {
+	input.ValidationErrors = v.Errors
+
+	input.SortSafeList = []string{"title", "published", "-title", "-published"}
+	if models.ValidateFilters(v, input.Filters); v.HasErrors() {
 		return nil, ErrFailedValidation
 	}
 
-	articles, err := svc.Repo.Article.Get(inputFilters.Title, inputFilters.Tags, inputFilters.Filters)
+	articles, err := svc.Repo.Article.Get(input.Title, input.Tags, input.Filters)
 	if err != nil {
 		return nil, err
 	}
 
 	return articles, nil
-}
-
-type UpdateArticleInput struct {
-	Title            string            `bson:"title,omitempty" json:"title,omitempty"`
-	Content          string            `bson:"content,omitempty" json:"content,omitempty"`
-	Tags             []string          `bson:"tags,omitempty" json:"tags,omitempty"`
-	Author           string            `bson:"author,omitempty" json:"author,omitempty"`
-	Status           string            `bson:"status,omitempty" json:"status,omitempty"`
-	ValidationErrors map[string]string `bson:"-" json:"-"`
 }
 
 func (svc *Service) UpdateArticle(id string, input *UpdateArticleInput) (*models.Article, error) {
