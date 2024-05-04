@@ -1,0 +1,9 @@
+build/
+tmp/
+Containerfile
+Dockerfile
+.dockerignore
+.gitignore
+.git
+.env*
+*.out
