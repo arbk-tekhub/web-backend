@@ -36,7 +36,7 @@ func (app *application) Routes() *gin.Engine {
 	})
 
 	// @Swagger private endpoint for API documentation
-	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+	router.GET("/docs/*any", app.requireBasicAuthentication(), ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	// @API V1:
 	v1 := router.Group("/v1")
@@ -47,6 +47,8 @@ func (app *application) Routes() *gin.Engine {
 		v1.GET("/articles", app.fetchArticlesHandler)
 
 		// @Private routes
+		v1.Use(app.requireBasicAuthentication())
+
 		v1.POST("/articles", app.createArticleHandler)
 		v1.DELETE("/articles/:id", app.deleteArticleHandler)
 		v1.PATCH("/articles/:id", app.updateArticleHandler)

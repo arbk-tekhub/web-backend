@@ -55,6 +55,10 @@ type config struct {
 		uri  string
 		name string
 	}
+	basicAuth struct {
+		username       string
+		hashedPassword string
+	}
 }
 
 func run() error {
@@ -67,6 +71,9 @@ func run() error {
 	cfg.env = env.GetString("APP_ENV", "development")
 	cfg.logLevel = env.GetLogLevel("LOG_LEVEL", slog.LevelDebug)
 	logger := slog.New(tint.NewHandler(os.Stdout, &tint.Options{Level: cfg.logLevel}))
+
+	cfg.basicAuth.username = env.GetString("BASIC_AUTH_USERNAME", "admin")
+	cfg.basicAuth.hashedPassword = env.GetString("BASIC_AUTH_HASHED_PASSWORD", "$2a$12$tzGCcHO3lEWT33elGOhh0uz485PUq.YUiR8U2c98/drCPCsGGtLlu")
 
 	cfg.database.uri = env.GetString("MONGO_URI", "mongodb://localhost:27017")
 	cfg.database.name = env.GetString("MONGO_DB_NAME", "test")

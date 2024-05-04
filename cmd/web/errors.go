@@ -49,3 +49,10 @@ func (app *application) badRequestResponse(c *gin.Context, err error) {
 		"error": message,
 	})
 }
+
+func (app *application) basicAuthenticationRequired(c *gin.Context) {
+	c.Header("WWW-Authenticate", `Basic realm="restricted", charset="UTF-8"`)
+
+	message := "You must be authenticated to access this resource"
+	c.JSON(http.StatusUnauthorized, gin.H{"error": message})
+}
