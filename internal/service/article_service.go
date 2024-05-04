@@ -139,7 +139,18 @@ func (svc *Service) UpdateArticle(id string, input *UpdateArticleInput) (*models
 	v := validator.New()
 	input.ValidationErrors = v.Errors
 
-	v.Check(validator.PermittedValues(strings.ToLower(input.Status), "published", "unpublished"), "status", "unrecognized value")
+	if validator.NotBlank(input.Title) {
+		v.Check(len(input.Title) >= 2, "title", "must be atleast 2 char long")
+	}
+
+	if input.Tags != nil {
+		v.Check(len(input.Tags) > 0, "tags", "must not be empty")
+		v.Check(validator.Unique(input.Tags), "tags", "must contain unique values")
+	}
+
+	if validator.NotBlank(input.Title) {
+		v.Check(validator.PermittedValues(strings.ToLower(input.Status), "published", "unpublished"), "status", "unrecognized value")
+	}
 
 	if v.HasErrors() {
 		return nil, ErrFailedValidation
