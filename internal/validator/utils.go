@@ -3,7 +3,12 @@ package validator
 import (
 	"regexp"
 	"slices"
+	"strings"
 )
+
+func NotBlank(value string) bool {
+	return strings.TrimSpace(value) != ""
+}
 
 func PermittedValues[T comparable](value T, permittedValues ...T) bool {
 	return slices.Contains(permittedValues, value)

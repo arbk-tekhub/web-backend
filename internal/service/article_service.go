@@ -25,9 +25,9 @@ func (svc Service) CreateArticle(input *CreateArticleInput) error {
 	v := validator.New()
 	input.ValidationErrors = v.Errors
 
-	v.Check(input.Title != "", "title", "must be provided")
+	v.Check(validator.NotBlank(input.Title), "title", "must be provided")
 	v.Check(len(input.Title) >= 2, "title", "must be atleast 2 char long")
-	v.Check(input.Author != "", "author", "must be provided")
+	v.Check(validator.NotBlank(input.Author), "author", "must be provided")
 	v.Check(input.Tags != nil, "tags", "must be provided")
 	v.Check(len(input.Tags) > 0, "tags", "must not be empty")
 	v.Check(validator.Unique(input.Tags), "tags", "must contain unique values")
