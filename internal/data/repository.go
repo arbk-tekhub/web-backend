@@ -16,6 +16,12 @@ type Repository struct {
 		Get(title string, tags []string, filters models.Filters) ([]models.Article, error)
 		Update(id primitive.ObjectID, updateDoc bson.M) *mongo.SingleResult
 	}
+	Subscriber interface {
+		Create(sub *models.Subscriber) error
+		GetByEmail(email string) (*models.Subscriber, error)
+		Get(filters models.Filters) ([]models.Article, error)
+		Delete(email string) (*mongo.DeleteResult, error)
+	}
 }
 
 func NewRepo(db *db.DB) *Repository {
