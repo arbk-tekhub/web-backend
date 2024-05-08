@@ -12,11 +12,9 @@ on:
 #   IMAGE_NAME: "benktech-backend"
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write   
+  golangci:
+    name: lint
+    runs-on: ubuntu-latest 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -24,5 +22,7 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: '1.22.2'
-      - name: Format code
-        run: go fmt ./...
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: latest
