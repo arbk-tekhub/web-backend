@@ -43,6 +43,7 @@ jobs:
   build:
     name: Build Docker Image
     if: github.event_name != 'pull_request'
+    needs: [lint,audit]
     runs-on: ubuntu-latest
     env:
       CONTAINER_REGISTRY: docker.io
@@ -64,5 +65,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          file: Containerfile
           push: true
           tags: ${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAG }}
