@@ -5,7 +5,7 @@ COLOR_COMMENT = \033[33m
 
 ## Variables
 MAIN_PACKAGE_PATH := ./cmd/web
-BINARY_NAME := benkapp
+BINARY_NAME := webapp
 SERVER_PORT := 8080
 
 .PHONY: help

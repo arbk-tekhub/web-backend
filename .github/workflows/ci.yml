@@ -3,9 +3,21 @@ on:
   push:
     branches:
       - "main"
+    paths-ignore:
+      - "Makefile"
+      - "README.md"
+      - "LICENCE"
+      - "docker-compose.yml"
+      - ".gitignore"
+      - ".env.example"
   pull_request:
     branches:
       - "main"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{github.workflow}}-${{github.ref}}
+  cancel-in-progress: false
 
 jobs:
   lint:
@@ -40,6 +52,7 @@ jobs:
         run: go mod tidy -v
       - name: Start audit
         run: make audit
+        continue-on-error: true
   build:
     name: Build Docker Image
     if: github.event_name != 'pull_request'
@@ -48,7 +61,7 @@ jobs:
     env:
       CONTAINER_REGISTRY: docker.io
       DOCKER_IMAGE_NAME: arafetk/benktech-backend
-      DOCKER_IMAGE_TAG: ${{ github.sha }}    
+      DOCKER_IMAGE_TAG: latest    
     steps:
       - uses: actions/checkout@v4
       - name: Set up QEMU

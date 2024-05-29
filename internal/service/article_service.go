@@ -52,16 +52,16 @@ func (svc Service) CreateArticle(input *CreateArticleInput) error {
 		return ErrFailedValidation
 	}
 
+	defaultStatus := "published"
+
 	article := &models.Article{
 		Title:   input.Title,
 		Content: input.Content,
 		Tags:    input.Tags,
 		Author:  input.Author,
+		Status:  defaultStatus,
 		Created: time.Now(),
 	}
-
-	// Default values
-	article.Status = "published"
 
 	return svc.Repo.Article.Create(article)
 }

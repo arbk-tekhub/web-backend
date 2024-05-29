@@ -2,15 +2,10 @@ localhost {
 
     root * /var/www/html
 
-    handle /docs/* {
-        respond "Not Found" 404
-        try_files /404.html
-    }
-
     handle {
-        reverse_proxy app:8080 {
+        reverse_proxy $APP_HOST:8080 {
 
-            health_uri app:8080/ping
+            health_uri $APP_HOST:8080/ping
 
             header_down +X-Content-Type-Options "nosniff"
             header_down +X-Frame-Options "deny"

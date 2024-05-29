@@ -1,23 +1,22 @@
-version: "3.8"
 services:
   app:
     build:
       context: .
       dockerfile: Containerfile
-    container_name: benk-backend
-    image: benk-backend:1.0.0
+    container_name: benk-backend-app
     env_file:
       - .env
     expose:
       - 8080
-
   caddy:
     build:
       context: ./caddy
       dockerfile: Dockerfile
-    container_name: caddy
+    container_name: benk-backend-gateway
     ports:
       - "8443:443"
+    environment:
+      - APP_HOST=app
     volumes:
       - caddy_data:/data
       - caddy_config:/config
