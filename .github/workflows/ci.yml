@@ -6,7 +6,7 @@ on:
     paths-ignore:
       - "Makefile"
       - "README.md"
-      - "LICENCE"
+      - "LICENSE"
       - "docker-compose.yml"
       - ".gitignore"
       - ".env.example"
