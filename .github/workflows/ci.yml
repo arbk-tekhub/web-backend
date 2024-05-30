@@ -29,6 +29,7 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: '1.22.3'
+          cache: true
       - name: Format code
         run: go fmt ./... 
       - name: golangci-lint
@@ -48,6 +49,7 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: '1.22.3'
+          cache: false
       - name: Get go mod cache path
         run: |
           echo "GOMODCACHE_PATH=$(go env GOMODCACHE)" >> $GITHUB_ENV
