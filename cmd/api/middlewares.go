@@ -23,17 +23,19 @@ func (app *application) requireBasicAuthentication() gin.HandlerFunc {
 		}
 
 		err := bcrypt.CompareHashAndPassword([]byte(app.config.basicAuth.hashedPassword), []byte(plaintextPassword))
-		switch {
-		case errors.Is(err, bcrypt.ErrMismatchedHashAndPassword):
-			app.basicAuthenticationRequired(c)
-			c.Abort()
-			return
-		case err != nil:
-			app.internalServerErrorResponse(c, err)
-			c.Abort()
-			return
-		}
+		if err != nil {
+			switch {
+			case errors.Is(err, bcrypt.ErrMismatchedHashAndPassword):
+				app.basicAuthenticationRequired(c)
+				c.Abort()
+				return
+			default:
+				app.internalServerErrorResponse(c, err)
+				c.Abort()
+				return
+			}
 
+		}
 		c.Next()
 	}
 }

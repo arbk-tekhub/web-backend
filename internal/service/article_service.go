@@ -16,7 +16,7 @@ type CreateArticleInput struct {
 	Title            string            `json:"title"`
 	Content          string            `json:"content"`
 	Tags             []string          `json:"tags"`
-	Author           string            `bson:"author"`
+	Author           string            `json:"author"`
 	ValidationErrors map[string]string `json:"-"`
 }
 
@@ -36,7 +36,7 @@ type FetchArticlesInput struct {
 	ValidationErrors map[string]string
 }
 
-func (svc Service) CreateArticle(input *CreateArticleInput) error {
+func (svc Service) CreateArticle(input *CreateArticleInput) (*models.Article, error) {
 
 	v := validator.New()
 	input.ValidationErrors = v.Errors
@@ -49,7 +49,7 @@ func (svc Service) CreateArticle(input *CreateArticleInput) error {
 	v.Check(validator.Unique(input.Tags), "tags", "must contain unique values")
 
 	if v.HasErrors() {
-		return ErrFailedValidation
+		return nil, ErrFailedValidation
 	}
 
 	defaultStatus := "published"
@@ -63,7 +63,11 @@ func (svc Service) CreateArticle(input *CreateArticleInput) error {
 		Created: time.Now(),
 	}
 
-	return svc.Repo.Article.Create(article)
+	err := svc.Repo.Article.Create(article)
+	if err != nil {
+		return nil, err
+	}
+	return article, nil
 }
 
 func (svc *Service) GetArticleByID(id string) (*models.Article, error) {

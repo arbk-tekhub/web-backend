@@ -19,7 +19,7 @@ func (app *application) createArticleHandler(c *gin.Context) {
 		return
 	}
 
-	err = app.service.CreateArticle(&input)
+	ar, err := app.service.CreateArticle(&input)
 	if err != nil {
 		switch {
 		case errors.Is(err, service.ErrFailedValidation):
@@ -33,7 +33,7 @@ func (app *application) createArticleHandler(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, gin.H{
-		"message": "article successfully created",
+		"article": ar,
 	})
 
 }
