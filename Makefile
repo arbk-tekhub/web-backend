@@ -4,8 +4,8 @@ COLOR_INFO    = \033[32m
 COLOR_COMMENT = \033[33m
 
 ## Variables
-MAIN_PACKAGE_PATH := ./cmd/web
-BINARY_NAME := web
+MAIN_PACKAGE_PATH := ./cmd/api
+BINARY_NAME := api
 SERVER_PORT := 8080
 
 .PHONY: help
@@ -79,3 +79,27 @@ run/live:
 ## generate swagger docs
 swag:
 	swag init --dir ${MAIN_PACKAGE_PATH}
+
+# ==================================================================================== #
+# Docker
+# ==================================================================================== #
+
+.PHONY: compose/build
+## Build all/specific resource(s) defined in the compose file
+compose/build:
+	docker compose build ${svc}
+
+.PHONY: compose/up
+## Create and start all/specifc resource(s) defined in the compose file
+compose/up:
+	docker compose up -d ${svc}
+
+.PHONY: compose/down
+## Stops and removes all resources defined in the compose file
+compose/down:
+	docker compose down
+
+.PHONY: compose/logs
+## View output from all/specific running service(s)
+compose/logs:
+	docker compose logs -f ${svc}

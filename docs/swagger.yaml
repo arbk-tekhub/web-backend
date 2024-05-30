@@ -5,11 +5,11 @@ info:
     email: mr.arafetk@gmail.com
     name: Arafet BenKilani
     url: https://www.linkedin.com/in/arafet-ben-kilani/
-  description: An API written in Go using Gin framework.
+  description: A REST API written in Go using Gin framework.
   license:
     name: MIT
     url: https://opensource.org/license/mit
-  title: Benk Techworld API
+  title: Benk-TechWorld REST API
   version: "1.0"
 paths: {}
 swagger: "2.0"

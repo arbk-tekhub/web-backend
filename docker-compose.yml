@@ -8,6 +8,9 @@ services:
       - .env
     expose:
       - 8080
+    volumes:
+      - go_cache:/usr/app/.cache/go-build/
+
   caddy:
     build:
       context: ./caddy
@@ -26,3 +29,4 @@ services:
 volumes:
   caddy_data:
   caddy_config:
+  go_cache:

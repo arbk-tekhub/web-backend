@@ -15,9 +15,9 @@ import (
 	"github.com/lmittmann/tint"
 )
 
-// @title     Benk Techworld API
+// @title     Benk-TechWorld REST API
 // @version 1.0
-// @description An API written in Go using Gin framework.
+// @description A REST API written in Go using Gin framework.
 
 // @contact.name Arafet BenKilani
 // @contact.url https://www.linkedin.com/in/arafet-ben-kilani/
@@ -75,7 +75,7 @@ func run() error {
 	cfg.basicAuth.username = env.GetString("BASIC_AUTH_USERNAME", "admin")
 	cfg.basicAuth.hashedPassword = env.GetString("BASIC_AUTH_HASHED_PASSWORD", "$2a$12$tzGCcHO3lEWT33elGOhh0uz485PUq.YUiR8U2c98/drCPCsGGtLlu")
 
-	cfg.database.uri = env.GetString("MONGO_URI", "mongodb://localhost:27017")
+	cfg.database.uri = env.GetString("MONGO_URI", "mongodb://local:localmongorootsecret@localhost:27017/")
 	cfg.database.name = env.GetString("MONGO_DB_NAME", "test")
 
 	db, err := db.Open(cfg.database.uri, cfg.database.name)

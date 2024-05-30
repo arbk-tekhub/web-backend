@@ -1,8 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "An API written in Go using Gin framework.",
-        "title": "Benk Techworld API",
+        "description": "A REST API written in Go using Gin framework.",
+        "title": "Benk-TechWorld REST API",
         "contact": {
             "name": "Arafet BenKilani",
             "url": "https://www.linkedin.com/in/arafet-ben-kilani/",

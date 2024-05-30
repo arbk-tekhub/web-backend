@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"time"
 
 	_ "github.com/benk-techworld/www-backend/docs"
 	"github.com/gin-gonic/gin"
@@ -19,16 +20,13 @@ func (app *application) Routes() *gin.Engine {
 	router.NoMethod(app.methodNotAllowedResponse)
 	router.NoRoute(app.notFoundResponse)
 
-	// @Server side rendering
-	router.Static("/static", "./assets/static/")
-	router.LoadHTMLGlob("assets/templates/*")
 	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", gin.H{
-			"msg": "Benk Techworld Backend",
+		c.JSON(http.StatusOK, gin.H{
+			"timestamp": time.Now().UnixNano(),
 		})
 	})
 
-	// @Endpoint for load balancers
+	// @Endpoint for LB/GW healthchecks
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",
@@ -38,11 +36,13 @@ func (app *application) Routes() *gin.Engine {
 	// @Swagger private endpoint for API documentation
 	router.GET("/docs/*any", app.requireBasicAuthentication(), ginSwagger.WrapHandler(swaggerfiles.Handler))
 
+	// @Meta-Data endpoint
+	router.GET("/latest/metadata", app.metaDataHandler)
+
 	// @API V1:
 	v1 := router.Group("/v1")
 	{
 		// @Public routes
-		v1.GET("/health", app.healthCheckHandler)
 		v1.GET("/articles/:id", app.fetchArticleHandler)
 		v1.GET("/articles", app.fetchArticlesHandler)
 
