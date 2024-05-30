@@ -28,7 +28,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.22.2'
+          go-version: '1.22.3'
       - name: Format code
         run: go fmt ./... 
       - name: golangci-lint
@@ -40,14 +40,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: '1.22.2'
       - name: Install make tool
         run: |
           sudo apt update -y
-          sudo apt install -y make
+          sudo apt install -y make      
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22.3'
+      - name: Get go mod cache path
+        run: |
+          echo "GOMODCACHE_PATH=$(go env GOMODCACHE)" >> $GITHUB_ENV
+      - name: Setup GO Cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.GOMODCACHE_PATH }}
+          key: ${{ runner.os }}-golang-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-golang-          
       - name: Tidy mod file
         run: go mod tidy -v
       - name: Start audit
