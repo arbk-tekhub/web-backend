@@ -36,7 +36,7 @@ func (app *application) Routes() *gin.Engine {
 	// @Swagger private endpoint for API documentation
 	router.GET("/docs/*any", app.requireBasicAuthentication(), ginSwagger.WrapHandler(swaggerfiles.Handler))
 
-	// @Meta-Data endpoint
+	// @Metadata endpoint
 	router.GET("/latest/metadata", app.metaDataHandler)
 
 	// @API V1:
@@ -45,6 +45,7 @@ func (app *application) Routes() *gin.Engine {
 		// @Public routes
 		v1.GET("/articles/:id", app.fetchArticleHandler)
 		v1.GET("/articles", app.fetchArticlesHandler)
+		v1.POST("/subs", app.createSubscriberHandler)
 
 		// @Private routes
 		v1.Use(app.requireBasicAuthentication())
@@ -52,6 +53,9 @@ func (app *application) Routes() *gin.Engine {
 		v1.POST("/articles", app.createArticleHandler)
 		v1.DELETE("/articles/:id", app.deleteArticleHandler)
 		v1.PATCH("/articles/:id", app.updateArticleHandler)
+
+		v1.GET("/subs", app.fetchSubsribersHandler)
+		v1.DELETE("/subs/:id", app.deleteSubscriberHandler)
 	}
 
 	return router

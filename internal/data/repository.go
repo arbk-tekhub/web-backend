@@ -18,14 +18,14 @@ type Repository struct {
 	}
 	Subscriber interface {
 		Create(sub *models.Subscriber) error
-		GetByEmail(email string) (*models.Subscriber, error)
-		Get(filters models.Filters) ([]models.Article, error)
-		Delete(email string) (*mongo.DeleteResult, error)
+		Get(email string, filters models.Filters) ([]models.Subscriber, error)
+		Delete(id primitive.ObjectID) (*mongo.DeleteResult, error)
 	}
 }
 
 func NewRepo(db *db.DB) *Repository {
 	return &Repository{
-		Article: ArticleRepo{db},
+		Article:    ArticleRepo{db},
+		Subscriber: SubscriberRepo{db},
 	}
 }
