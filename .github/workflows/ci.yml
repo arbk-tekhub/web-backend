@@ -10,6 +10,7 @@ on:
       - "docker-compose.yml"
       - ".gitignore"
       - ".env.example"
+      - "caddy"
   pull_request:
     branches:
       - "main"
@@ -72,7 +73,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CONTAINER_REGISTRY: docker.io
-      DOCKER_IMAGE_NAME: arafetk/benktech-backend
+      DOCKER_IMAGE_NAME: arafetk/benktech-api
       DOCKER_IMAGE_TAG: latest    
     steps:
       - uses: actions/checkout@v4
