@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Containerfile
-    container_name: benk-backend-app
+    container_name: benk-backend-api
     env_file:
       - .env
     expose:
@@ -19,7 +19,8 @@ services:
     ports:
       - "8443:443"
     environment:
-      - APP_HOST=app
+      - DOMAIN_NAME=localhost
+      - API_HOST=app
     volumes:
       - caddy_data:/data
       - caddy_config:/config

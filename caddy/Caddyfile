@@ -2,7 +2,7 @@
 		order rate_limit before basicauth
 }
 
-localhost {
+$DOMAIN_NAME {
 
     rate_limit {
         zone articles {
@@ -35,9 +35,9 @@ localhost {
     }
 
     handle {
-        reverse_proxy $APP_HOST:8080 {
+        reverse_proxy $API_HOST:8080 {
 
-            health_uri $APP_HOST:8080/ping
+            health_uri $API_HOST:8080/ping
 
             header_down +X-Content-Type-Options "nosniff"
             header_down +X-Frame-Options "deny"

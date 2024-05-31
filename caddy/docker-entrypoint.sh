@@ -2,7 +2,7 @@
 
 set -eu
 
-envsubst '$APP_HOST' < /etc/caddy/Caddyfile.template > /etc/caddy/Caddyfile
+envsubst '$DOMAIN_NAME $API_HOST' < /etc/caddy/Caddyfile.template > /etc/caddy/Caddyfile
 
 caddy fmt --overwrite /etc/caddy/Caddyfile
 caddy validate --config /etc/caddy/Caddyfile
