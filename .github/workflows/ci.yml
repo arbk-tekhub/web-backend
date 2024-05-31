@@ -10,7 +10,7 @@ on:
       - "docker-compose.yml"
       - ".gitignore"
       - ".env.example"
-      - "caddy"
+      - "caddy/**"
       - ".github/workflows/caddy.yml"
   pull_request:
     branches:

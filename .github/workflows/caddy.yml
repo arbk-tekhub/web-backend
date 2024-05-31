@@ -4,7 +4,7 @@ on:
     branches:
       - "main"
     paths:
-      - "caddy"
+      - "caddy/**"
       - ".github/workflows/caddy.yml"
   workflow_dispatch:
 
