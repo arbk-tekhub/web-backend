@@ -1,6 +1,38 @@
+{
+		order rate_limit before basicauth
+}
+
 localhost {
 
-    root * /var/www/html
+    rate_limit {
+        zone articles {
+            match {
+                method GET
+                path /v1/articles
+            }
+            key {http.request.remote_ip}
+            events 150
+            window 1m
+        }
+
+        zone subs {
+            match {
+                method POST
+                path /v1/subs
+            }
+            key {http.request.remote_ip}
+            events 1
+            window 30s
+        }
+
+        zone dynamic {
+            key {http.request.remote_ip}
+            events 60
+            window 1m
+        }
+
+        jitter 0.2
+    }
 
     handle {
         reverse_proxy $APP_HOST:8080 {
@@ -10,6 +42,7 @@ localhost {
             header_down +X-Content-Type-Options "nosniff"
             header_down +X-Frame-Options "deny"
             header_down +Referrer-Policy "origin-when-cross-origin"
+     
 
         }        
     }
